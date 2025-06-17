@@ -1,0 +1,28 @@
+datasource db { provider = "sqlite"; url = "file:./dev.db" }
+generator client { provider = "prisma-client-js" }
+
+model Thread {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  authorType  String   // "human" | "ai" | "hybrid"
+  createdAt   DateTime @default(now())
+  nodes       Node[]
+}
+
+model Node {
+  id        Int      @id @default(autoincrement())
+  content   String
+  stake     Float
+  threadId  Int
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model AgentLog {
+  id        Int      @id @default(autoincrement())
+  agentId   String
+  action    String
+  payload   Json
+  createdAt DateTime @default(now())
+}
